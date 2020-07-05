@@ -36,7 +36,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("|%15s|%15s|%15s|%15s|%9s|%35s|%6s|%6s|%15s|%15s|%3d|",
+        return String.format("|%15s|%15s|%15s|%15s|%11s|%35s|%6s|%6s|%15s|%15s|%3d|",
                 name, lastName, email, password, phone, registrationDateTime, status, removed,
                 gender.getGenderName(), roles, userId);
     }
