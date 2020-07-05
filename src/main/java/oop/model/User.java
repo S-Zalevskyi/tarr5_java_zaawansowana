@@ -11,6 +11,15 @@ import java.util.Set;
 public class User {
     private String name;
     private String lastName;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     private String email;
     private String password;
     private String phone;

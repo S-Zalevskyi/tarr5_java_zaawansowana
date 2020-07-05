@@ -11,16 +11,16 @@ import java.util.Set;
 
 // Klasa controllera - odpowiedzialna za obsługę i implementację logiki biznesowej aplikacji
 public class UserController implements UserControllerTempl {
-    private String passwordEncoder(String password){
+    private String passwordEncoder(String password) {
         try {
             // Obiekt do szyfrowania hasła algorytmem MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
             // Operacja szyfrowania zwraca tablicę liczb naturalnych
-            byte [] passwordHash = md.digest(password.getBytes());
+            byte[] passwordHash = md.digest(password.getBytes());
             // Zapisanie tablicy liczb w typie String
             String passwordHashTxt = "";
-            for (byte digit : passwordHash){
-                passwordHashTxt += String.format("%x",digit);
+            for (byte digit : passwordHash) {
+                passwordHashTxt += String.format("%x", digit);
             }
             return passwordHashTxt;
         } catch (NoSuchAlgorithmException e) {
@@ -28,6 +28,7 @@ public class UserController implements UserControllerTempl {
             return null;
         }
     }
+
     @Override           // adnotacja - przysłniecie
     public void registerUser(User user) {
         // Aktualizacja hasła w modelu user
@@ -35,24 +36,46 @@ public class UserController implements UserControllerTempl {
         users.add(user);
         System.out.println("Dodano nowego użytkownika: " + user.getEmail());
     }
+
+    @Override
+    public boolean loginUser(String email, String password) {
+        for (User user : users) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(passwordEncoder(password))) {
+                System.out.println("Zalogovano uzytkownika: " + user.getEmail());
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public List<User> findAllUsers() {
         return users;
     }
 
-    @Override
-    public boolean loginUser(String email, String password) {
-        return false;
-    }
 
     @Override
     public User findUserById(int userId) {
+        for (User user : users) {
+            if (user.getUserId() == userId) {
+                System.out.println("Znalezniono uzytkownika o id: " + user);
+                return user;
+            }
+        }
+        System.out.println("Niw znalezniono uzytkownika o id: " + userId);
         return null;
     }
 
     @Override
     public void updateUserPassword(int userId, String newPassword) {
 
+        User user = findUserById(userId);
+        if (user != null) {
+            user.setPassword(passwordEncoder(newPassword));
+            System.out.println("Zmnieniono haslo");
+        } else {
+            System.out.println("Nie zmnieniono hasla");
+        }
     }
 
     @Override
@@ -64,7 +87,6 @@ public class UserController implements UserControllerTempl {
     public void updateRole(int userId, Set<Role> newRoles) {
 
     }
-
 
 
     @Override
